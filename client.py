@@ -23,7 +23,7 @@ class EmailOctopusAPI(object):
         request = requests.get(EmailOctopusAPI.list_url, params=payload)
         response = request.json()
         if request.status_code != requests.codes.ok:
-            raise EmailOctopusClientException(response['message'], response['code'])
+            raise EmailOctopusClientException(response['error']['message'], response['error']['code'])
         return [EOList.from_dict(i) for i in response['lists'] ]
     
     def get_list(self, id):
@@ -31,75 +31,77 @@ class EmailOctopusAPI(object):
         payload = {"api_key": self.key }
         request = requests.get(url, params=payload)
         if request.status_code != requests.codes.ok:
-            raise EmailOctopusClientException(response['message'], response['code'])
+            raise EmailOctopusClientException(response['error']['message'], response['error']['code'])
         return EOList.from_dict(response['list'])
     
     def create_list(self, name):
         payload = {"api_key": self.key, "name":name }
         request = requests.post(EmailOctopusAPI.list_url, params=payload)
         if request.status_code != requests.codes.ok:
-            raise EmailOctopusClientException(response['message'], response['code'])
+            raise EmailOctopusClientException(response['error']['message'], response['error']['code'])
         return EOList.from_dict(response['list'])
     
     def update_list(self, id, name):
         url = EmailOctopusAPI.list_url+'/'+id
-        payload = {"api_key": self.key, "name":nsame }
-        request = requests.post(list_url+'/'+id, params=payload)
+        payload = {"api_key": self.key, "name":name }
+        request = requests.put(list_url+'/'+id, params=payload)
         if request.status_code != requests.codes.ok:
-            raise EmailOctopusClientException(response['message'], response['code'])
+            raise EmailOctopusClientException(response['error']['message'], response['error']['code'])
         return EOList.from_dict(response['list'])
     
     def delete_list(self, id):
         url = EmailOctopusAPI.list_url+'/'+id
         payload = {"api_key": self.key }
-        request = requests.post(EmailOctopusAPI.list_url, params=payload)
+        request = requests.delete(EmailOctopusAPI.list_url, params=payload)
         response = request.json()
         if request.status_code != requests.codes.ok:
-            raise EmailOctopusClientException(response['message'], response['code'])
+            raise EmailOctopusClientException(response['error']['message'], response['error']['code'])
         return response
     
     # List Members
     def get_list_member(self, list_id, member_id):
-        url = EmailOctopusAPI.list_url+'/'+list_id+'/'+list_members+'/'+member_id
+        url = EmailOctopusAPI.list_url+'/'+list_id+EmailOctopusAPI.list_members+'/'+member_id
         payload = {"api_key": self.key}
-        request = requests.get(url, payload=payload)
+        request = requests.get(url, params=payload)
         response = request.json()
         if request.status_code != requests.codes.ok:
-            raise EmailOctopusClientException(response['message'], response['code'])
-        return EOListMember.from_dict(response['member'])
+            raise EmailOctopusClientException(response['error']['message'], response['error']['code'])
+        return EOListMember.from_dict(response)
     
     def get_list_members(self, list_id):
-        url = EmailOctopusAPI.list_url+'/'+list_id+'/'+list_members
+        url = EmailOctopusAPI.list_url+'/'+list_id+EmailOctopusAPI.list_members
         payload = {"api_key": self.key}
-        request = requests.get(url, payload=payload)
+        request = requests.get(url, params=payload)
         response = request.json()
         if request.status_code != requests.codes.ok:
-            raise EmailOctopusClientException(response['message'], response['code'])
-        return [EOListMember.from_dict(i)  for i in response['lists']]
+            raise EmailOctopusClientException(response['error']['message'], response['error']['code'])
+        return [EOListMember.from_dict(i)  for i in response['members']]
     
     def create_list_member(self, list_id, payload):
-        url = EmailOctopusAPI.list_url+'/'+list_id+'/'+list_members
+        url = EmailOctopusAPI.list_url+'/'+list_id+EmailOctopusAPI.list_members
         payload["api_key"] = self.key
-        request = requests.get(url, payload=payload)
-        response = request.json()
-        if request.status_code != requests.codes.ok:
-            raise EmailOctopusClientException(response['message'], response['code'])
-        return EOListMember.from_dict(response['member'])
-    
-    def update_list_member(self, list_id, member_id, payload):
-        url = EmailOctopusAPI.list_url+'/'+list_id+'/'+list_members +'/' + member_id
-        payload["api_key"] = self.key
-        request = requests.get(url, payload=payload)
-        response = request.json()
-        if request.status_code != requests.codes.ok:
-            raise EmailOctopusClientException(response['message'], response['code'])
-        return EOListMember.from_dict(response['member'])
-    
-    def delete_list_member(self, list_id, member_id):
-        url = EmailOctopusAPI.list_url+'/'+list_id+'/'+list_members +'/' + member_id
-        payload = {"api_key": self.key }
         request = requests.post(url, params=payload)
         response = request.json()
         if request.status_code != requests.codes.ok:
-            raise EmailOctopusClientException(response['message'], response['code'])
+            raise EmailOctopusClientException(response['error']['message'], response['error']['code'])
+        return EOListMember.from_dict(response)
+    
+    def update_list_member(self, list_id, member_id, payload):
+        url = EmailOctopusAPI.list_url+'/'+list_id+EmailOctopusAPI.list_members +'/' + member_id
+        payload["api_key"] = self.key
+        request = requests.put(url, params=payload)
+        response = request.json()
+        print(url)
+        print(response)
+        if request.status_code != requests.codes.ok:
+            raise EmailOctopusClientException(response['error']['message'], response['error']['code'])
+        return EOListMember.from_dict(response)
+    
+    def delete_list_member(self, list_id, member_id):
+        url = EmailOctopusAPI.list_url+'/'+list_id+EmailOctopusAPI.list_members +'/' + member_id
+        payload = {"api_key": self.key }
+        request = requests.delete(url, params=payload)
+        response = request.json()
+        if request.status_code != requests.codes.ok:
+            raise EmailOctopusClientException(response['error']['message'], response['error']['code'])
         return response
