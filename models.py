@@ -35,14 +35,16 @@ class EOListMember(object):
         
     def __str__(self, *args, **kwargs):
         return "(%s) %s %s" % (self.id, self.first_name, self.last_name)
+    
+    @classmethod        
+    def from_dict(cls, data):
+        return cls(data['id'], data['email_address'], data['first_name'], data['last_name'], data['subscribed'], data['created_at'])
 
 class EOList(object):
     
-    def __init__(self, name, arr, created_at=datetime.now()):
+    def __init__(self, id, name,created_at=datetime.now()):
+        self.id = id
         self.name = name
-        if any(lambda i: type(i) != EOListMember, arr):
-            raise EmailOctopusClientException("Not all members are instances of EOListMember")
-        self.arr = arr
         self.created_at = created_at
         
     def __str__(self, *args, **kwargs):
@@ -51,3 +53,7 @@ class EOList(object):
     def __iter__(self):
         for i in self.arr:
             yield i
+    
+    @classmethod        
+    def from_dict(cls, data):
+        return cls(data['id'], data['name'], data['created_at'])
