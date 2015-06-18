@@ -30,24 +30,27 @@ class EmailOctopusAPI(object):
         url = EmailOctopusAPI.list_url +'/'+id
         payload = {"api_key": self.key }
         request = requests.get(url, params=payload)
+        response = request.json()
         if request.status_code != requests.codes.ok:
             raise EmailOctopusClientException(response['error']['message'], response['error']['code'])
-        return EOList.from_dict(response['list'])
+        return EOList.from_dict(response)
     
     def create_list(self, name):
         payload = {"api_key": self.key, "name":name }
         request = requests.post(EmailOctopusAPI.list_url, params=payload)
+        response = request.json()
         if request.status_code != requests.codes.ok:
             raise EmailOctopusClientException(response['error']['message'], response['error']['code'])
-        return EOList.from_dict(response['list'])
+        return EOList.from_dict(response)
     
     def update_list(self, id, name):
         url = EmailOctopusAPI.list_url+'/'+id
         payload = {"api_key": self.key, "name":name }
-        request = requests.put(list_url+'/'+id, params=payload)
+        request = requests.put(EmailOctopusAPI.list_url+'/'+id, params=payload)
+        response = request.json()
         if request.status_code != requests.codes.ok:
             raise EmailOctopusClientException(response['error']['message'], response['error']['code'])
-        return EOList.from_dict(response['list'])
+        return EOList.from_dict(response)
     
     def delete_list(self, id):
         url = EmailOctopusAPI.list_url+'/'+id
