@@ -23,30 +23,30 @@ Classes
 
 The wrapper returns instances of these classes. If accessing the List API, all lists will be returned as instances of `EOList`.  If accessing a List Member API, an `EOListMember` instance will be returned.
 
--EOList
-  -id
-  -name
-  -created_at
--EOListMember
-  -id
-  -first_name
-  -last_name
-  -email_address
-  -subscribed
-  -created_at
+- EOList
+  - id
+  - name
+  - created_at
+- EOListMember
+  - id
+  - first_name
+  - last_name
+  - email_address
+  - subscribed
+  - created_at
   
 API Methods
 -----
--List
-  -`get_lists()`
-  -`get_list(id)`
-  -`create_list(name)`
-  -`update_list(name)`
-  -`delete_list(id)`
+- List
+  - `get_lists()`
+  - `get_list(id)`
+  - `create_list(name)`
+  - `update_list(name)`
+  - `delete_list(id)`
 
--List Member
-  -`get_list_members(list_id)`
-  -`get_list_member(list_id, member_id)`
-  -`create_list_member(list_id, data)`
-  -`update_list_member(list_id, member_id, data)`
-  -`delete_list_member(list_id, member_id)`
+- List Member
+  - `get_list_members(list_id)`
+  - `get_list_member(list_id, member_id)`
+  - `create_list_member(list_id, data)`
+  - `update_list_member(list_id, member_id, data)`
+  - `delete_list_member(list_id, member_id)`
