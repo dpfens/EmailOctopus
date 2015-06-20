@@ -15,8 +15,8 @@ Getting Started
 
 It is not difficult. pass your Email Octopus API key as the argument to `client.EmailOctopusAPI` and you can start making calls to the API.
 
->   import client
->   api = client.EmailOctopusAPI('00000000-0000-0000-0000-000000000000')
+  import client
+  api = client.EmailOctopusAPI('00000000-0000-0000-0000-000000000000')
 
 Classes
 -----
