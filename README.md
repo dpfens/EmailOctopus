@@ -1,5 +1,5 @@
 # EmailOctopusAPI
-Python 2.7 wrapper for Email Octopus
+Python Wrapper for Email Octopus
 Email Octopus API
 =================
 
@@ -9,6 +9,9 @@ Dependencies
 -----
 
 1. requests
+2. pyopenssl
+3. ndg-httpsclient
+4. pyasn1
 
 Getting Started
 -----
