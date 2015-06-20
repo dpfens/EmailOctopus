@@ -8,15 +8,16 @@ This is a simple API wrapper for Python 2.7 and below.  It provides simple acces
 Dependencies
 -----
 
-1.  requests
+1. requests
 
 Getting Started
 -----
 
 It is not difficult. pass your Email Octopus API key as the argument to `client.EmailOctopusAPI` and you can start making calls to the API.
 
-  import client
-  api = client.EmailOctopusAPI('00000000-0000-0000-0000-000000000000')
+    import client
+    api = client.EmailOctopusAPI('00000000-0000-0000-0000-000000000000')
+    api.get_lists()
 
 Classes
 -----
