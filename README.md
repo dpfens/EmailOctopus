@@ -1,56 +1,73 @@
-# EmailOctopusAPI
-Python Wrapper for Email Octopus
-Email Octopus API
-=================
+# EmailOctopus
+Python 2/3 Wrapper for the Email Octopus API
 
-This is a simple API wrapper for Python 2.7 and below.  It provides simple access to  lists and list members.
-
-Dependencies
------
+## Dependencies
 
 1. requests
-2. pyopenssl
-3. ndg-httpsclient
-4. pyasn1
 
-Getting Started
------
+## Getting Started
+Pass your Email Octopus API key as the argument to `emailoctopus.api.RestAPI`:
 
-It is not difficult. pass your Email Octopus API key as the argument to `client.EmailOctopusAPI` and you can start making calls to the API.
+```python
+from emailoctopus.api import RestAPI
+from emailoctopus.campaign import Campaign
+api_key = '00000000-0000-0000-0000-000000000000'
+api = RestAPI(api_key)
+campaigns, paging = Campaign.get(api)
+```
 
-    import client
-    api = client.EmailOctopusAPI('00000000-0000-0000-0000-000000000000')
-    api.get_lists()
+### Paging
+To fetch the next/previous page when fetching `Campaign` or `EmailList`, :
+```python
+campaigns = []
+current_page = 1
+campaign_page_count = float('inf')
+while campaign_page_count:
+    campaign_page, paging = Campaign.get(api)
+    campaigns += campaign_page
+    campaign_page_count = len(campaign_page)
+    current_page += 1
+```
 
-Classes
------
+### Campaign reporting
+To fetch a `Summary` of a given `Campaign`:
+```python
+from emailoctopus.campaign import Summary, Report
+for campaign in campaigns:
+    campaign_summary = Summary.get(api, campaign)
+    bounce_report = Report.bounced(api, campaign)
+```
 
-The wrapper returns instances of these classes. If accessing the List API, all lists will be returned as instances of `EOList`.  If accessing a List Member API, an `EOListMember` instance will be returned.
+To fetch a given
 
-- EOList
-  - id
-  - name
-  - created_at
-- EOListMember
-  - id
-  - first_name
-  - last_name
-  - email_address
-  - subscribed
-  - created_at
-  
-API Methods
------
-- List
-  - `get_lists()`
-  - `get_list(id)`
-  - `create_list(name)`
-  - `update_list(name)`
-  - `delete_list(id)`
+### Fetching Lists
+To fetch a List, use the `emailoctopus.email_list.EmailList` class:
+```python
+from emailoctopus.email_list import EmailList
+email_lists, paging = EmailList.get(api)
+```
 
-- List Member
-  - `get_list_members(list_id)`
-  - `get_list_member(list_id, member_id)`
-  - `create_list_member(list_id, data)`
-  - `update_list_member(list_id, member_id, data)`
-  - `delete_list_member(list_id, member_id)`
+### Creating a List
+```python
+email_list_instance = EmailList.create(api, 'My New List')
+```
+
+### Deleting a List
+```python
+email_list_instance.delete(api)
+```
+
+### Fetching Contacts
+To fetch the `Contacts` of a given `EmailList`:
+```python
+from emailoctopus.email_list import Contact
+for email_list in email_lists:
+    list_contacts = Contact.get(api, email_list)
+```
+
+### Adding a person as a Contact to a List
+```python
+fields = dict(FirstName='John', LastName='Doe')
+status = 'SUBSCRIBED'
+new_contact_instance = Contact.create(api, email_list_instance, 'johndoe@email.com', fields, status=status)
+```
